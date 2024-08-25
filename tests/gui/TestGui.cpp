@@ -494,11 +494,14 @@ void TestGui::testOpenRemoteDatabase()
 
         auto* importTypeList = wizard->currentPage()->findChild<QListWidget*>("importTypeList");
         QVERIFY(importTypeList);
-        importTypeList->scrollToBottom();
 
-        QListWidgetItem* remoteOption = importTypeList->item(importTypeList->count() - 1);
-        QRect remoteOptionRect = importTypeList->visualItemRect(remoteOption);
-        QTest::mouseClick(importTypeList->viewport(), Qt::LeftButton, nullptr, remoteOptionRect.center());
+        for (int i = 0; i < importTypeList->count(); ++i) {
+            auto item = importTypeList->item(i);
+            if (item->data(Qt::UserRole) == ImportWizard::IMPORT_REMOTE) {
+                importTypeList->setCurrentItem(item);
+                break;
+            }
+        }
 
         auto* downloadCommandEdit = wizard->currentPage()->findChild<QLineEdit*>("downloadCommand");
         QVERIFY(downloadCommandEdit);
