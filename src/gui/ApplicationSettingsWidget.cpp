@@ -346,17 +346,15 @@ void ApplicationSettingsWidget::loadSettings()
     m_secUi->hideTotpCheckBox->setChecked(config()->get(Config::Security_HideTotpPreviewPanel).toBool());
     m_secUi->hideNotesCheckBox->setChecked(config()->get(Config::Security_HideNotes).toBool());
 
-    m_secUi->quickUnlockCheckBox->setEnabled(getQuickUnlock()->isAvailable());
     m_secUi->quickUnlockCheckBox->setChecked(config()->get(Config::Security_QuickUnlock).toBool());
-    m_secUi->quickUnlockCheckBox->setToolTip(
-        m_secUi->quickUnlockCheckBox->isEnabled() ? QString() : tr("Quick unlock is not available on your device."));
 
-    m_secUi->quickUnlockRememberCheckBox->setEnabled(getQuickUnlock()->isAvailable()
-                                                     && getQuickUnlock()->canRemember());
+#ifdef Q_OS_LINUX
+    // Remembering quick unlock is not supported on Linux
+    m_secUi->quickUnlockRememberCheckBox->setVisible(false);
+#else
+    m_secUi->quickUnlockRememberCheckBox->setEnabled(m_secUi->quickUnlockCheckBox->isChecked());
     m_secUi->quickUnlockRememberCheckBox->setChecked(config()->get(Config::Security_QuickUnlockRemember).toBool());
-    m_secUi->quickUnlockRememberCheckBox->setToolTip(m_secUi->quickUnlockRememberCheckBox->isEnabled()
-                                                         ? QString()
-                                                         : tr("Quick unlock cannot be remembered on your device."));
+#endif
 
     for (const ExtraPage& page : asConst(m_extraPages)) {
         page.loadSettings();
