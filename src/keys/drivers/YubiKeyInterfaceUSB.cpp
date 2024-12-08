@@ -151,7 +151,7 @@ YubiKey::KeyMap YubiKeyInterfaceUSB::findValidKeys()
                 auto config = (slot == 1 ? CONFIG1_VALID : CONFIG2_VALID);
                 if (!(ykds_touch_level(st) & config)) {
                     // Slot is not configured
-                    qWarning("YubiKey slot %d is not configured for %s", slot, serial);
+                    qWarning("YubiKey slot %d is not configured for YubiKey with S/N: %s", slot, serial);
                     continue;
                 }
                 // Don't actually challenge a YubiKey Neo or below, they always require button press
